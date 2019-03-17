@@ -1,0 +1,9 @@
+.button {
+    width: 100px;
+    height: 50px;
+    background-color: #60bdda;
+    border-radius: 5px;
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+}

@@ -1,0 +1,24 @@
+
+
+.container {
+    width: 100%;
+    height: 100%;
+    display: table-cell;
+}
+
+.post {
+    text-align: center;
+    border: 2px black solid;
+    margin: 100px;
+    padding: 20px;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    font-size: 28px;
+}
+
+.text:first-letter {
+    text-transform: uppercase;
+}
+
+.text::after {
+    content: '.';
+}
