@@ -16,6 +16,11 @@
     background: rgba(96, 189, 218, 0.45);
 }
 
-.body {
+.marked {
+    display:inline;
+}
 
+.mark {
+    width: 0;
+    background-color: rgba(244, 255, 38, 0.42);
 }
