@@ -1,41 +1,56 @@
-import React, { Component } from 'react'
-import { scaleLinear } from 'd3'
-import { interpolateLab } from 'd3'
-import * as _ from 'lodash'
+import React, {Component} from 'react'
+import {interpolateLab, scaleLinear} from 'd3'
 import './Bars.css'
+import Aux from '../../hoc/Aux/Aux'
 
 export default class Bars extends Component {
     constructor(props) {
         super(props);
 
-        this.colorScale = scaleLinear()
+        this.green = scaleLinear()
             .domain([0, this.props.maxValue])
-            .range(['#F3E5F5', '#7B1FA2'])
+            .range(['#F3E5F5', '#40a200'])
+            .interpolate(interpolateLab)
+
+        this.red = scaleLinear()
+            .domain([0, this.props.maxValue])
+            .range(['#F3E5F5', '#a20a19'])
             .interpolate(interpolateLab)
     }
 
     render() {
-        const { scales, margins, data, svgDimensions } = this.props;
-        const { xScale, yScale } = scales;
-        const { height } = svgDimensions;
-
-        // data.data.map(el => console.log(_.round(el.leftovers.actual, 0)));
+        const {scales, margins, data, svgDimensions} = this.props;
+        const {xScale, yScale} = scales;
+        const {height} = svgDimensions;
 
         const bars = (
             data.map(datum => {
-                return(
-                <rect
-                    onMouseEnter={()=>console.log('dd')}
-                    className="bar"
-                    key={datum['0']}
-                    x={xScale(datum['0'])}
-                    y={yScale(datum['2'])}
-                    height={_.round(height - margins.bottom - scales.yScale(_.parseInt(datum['2'])))}
-                    width={xScale.bandwidth()}
-                    fill={this.colorScale(datum['2'])}
-                    onClick={()=>console.log('hey')}
-                />
-                )})
+                const yPlan = yScale(datum.plan);
+                const y = yScale(datum.actual)-10;
+                console.log(yPlan+' - plan : actual  - '+yScale(datum.actual));
+                return (
+                    <Aux>
+                    <text
+                    x={xScale(datum.date)-10}
+                    y={Math.abs(yPlan-y) > 20 ? y : y-20}
+                    fill={'#a4aba6'}
+                    >
+                        {datum.actual}
+                    </text>
+                    <rect
+                        className="bar"
+                        key={datum.date}
+                        x={xScale(datum.date)}
+                        y={yScale(datum.actual)}
+                        height={(height - margins.bottom - Math.abs(yScale(datum.actual)))}
+                        width={xScale.bandwidth()}
+                        fill={datum.actual >= datum.plan ?
+                                this.green(datum.actual) : this.red(datum.actual)}
+                        onClick={() => console.log('hey')}
+                    />
+                    </Aux>
+                )
+            })
         );
 
         return (
