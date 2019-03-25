@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
-import axios from '../../../axios'
-import * as classes from "./FullPost.module.css";
+import * as classes from "./FullPost.module.css"
+import {getCommentsById, getPostById} from "../../../api"
+import Comment from './comment/Comment'
 
 interface IProps {
     match: any;
@@ -11,11 +12,18 @@ interface IState {
         title: string;
         body: string;
         id: number;
-        handleClick: any;
     } | null;
+
+    comments: Array<{
+        name: string;
+        email: string;
+        body: string;
+    }> | null;
 }
 
-
+/**
+ * Компонент получает ID из path и рендерит отдельный пост
+ */
 export default class FullPost extends Component<IProps, IState> {
 
     constructor(props: any) {
@@ -23,30 +31,44 @@ export default class FullPost extends Component<IProps, IState> {
 
         this.state = {
             post: null,
+            comments: null
         };
     }
 
-    componentDidMount(): void {
-        axios.get('/' + this.props.match.params.id)
-            .then(response => this.setState({post: response.data}))
-            .catch(error => console.log(error))
+    async componentDidMount(): Promise<void> {
+        const id = this.props.match.params.id;
+        this.setState({post: await getPostById(id), comments: await getCommentsById(id)});
     }
 
-    render() {
-        const post: any = this.state.post;
+    renderComments = () => {
+        const {comments} = this.state;
 
-        return post ? (
+        if (comments) {
+            return comments.map((el, i) => {
+                return <Comment key={i} count={i + 1} name={el.name} body={el.body} email={el.email}/>
+            })
+        }
+    };
+
+    render() {
+        const {post, comments} = this.state;
+
+        if (!post) {
+            return null;
+        }
+
+        return (
             <div className={classes.container}>
                 <div className={classes.post}>
-                    <h3>Id</h3>
-                    <div>{post.id}</div>
-                    <hr/>
-                    <h3>Title</h3>
+                    <h3>Post #{post.id}</h3>
                     <div className={classes.text}>{post.title}</div>
                     <hr/>
                     <div className={classes.text}>{post.body}</div>
+                    <hr/>
                 </div>
+                {this.renderComments()}
             </div>
-        ) : null;
+
+        );
     }
 }

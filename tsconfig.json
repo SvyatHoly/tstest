@@ -23,4 +23,8 @@
   "include": [
     "src"
   ]
+  //  "exclude": [
+  //    "src/components/graph"
+  //  ]
+  //}
 }
