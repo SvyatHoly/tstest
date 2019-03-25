@@ -1,28 +1,23 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import * as React from "react";
+import {Component} from "react";
+import {Route, Switch} from 'react-router-dom';
+import Layout from './hoc/Layout/Layout'
+import SimplePage from './components/simplePage/SimplePage'
+import Posts from "./components/posts/Posts";
+import FullPost from "./components/posts/fullPost/FullPost";
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
+export default class App extends Component<any, any> {
+    render() {
+        return (
+            <Layout>
+                <Switch>
+                    <Route path={'/'} exact render={() => <SimplePage children={1}/>}/>
+                    <Route path={'/2'} exact render={() => <SimplePage children={2}/>}/>
+                    <Route path={'/3'} exact render={() => <SimplePage children={3}/>}/>
+                    <Route path={'/posts'} exact component={Posts}/>}/>
+                    <Route path={'/posts/:id'} component={FullPost}/>
+                </Switch>
+            </Layout>
+        )
+    }
 }
-
-export default App;
