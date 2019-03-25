@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import SinglePost from './singlePost/SinglePost'
 import * as classes from './Posts.module.css'
 import {getPosts} from '../../api'
-import {findSubString} from '../../stringSearchUtil'
+import {findSubString} from '../../util/stringSearchUtil'
 import ThemeContext from '../../context/ThemeContext';
 
 interface IProps {

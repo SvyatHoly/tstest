@@ -6,6 +6,7 @@ import Posts from "./components/posts/Posts"
 import FullPost from "./components/posts/fullPost/FullPost"
 import ThemeContext, {Theme, themes} from './context/ThemeContext'
 import './App.css'
+import Chart from "./components/graph/Chart";
 
 interface State {
     theme: Theme;
@@ -41,6 +42,7 @@ export default class App extends Component<{}, State> {
             <Switch>
                 <Route path={'/posts'} exact component={Posts}/>}/>
                 <Route path={'/posts/:id'} component={FullPost}/>
+                <Route path={'/graph'} component={Chart}/>
             </Switch>
         );
         return (
