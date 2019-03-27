@@ -6,7 +6,7 @@ import Posts from "./components/posts/Posts"
 import FullPost from "./components/posts/fullPost/FullPost"
 import ThemeContext, {Theme, themes} from './context/ThemeContext'
 import './App.css'
-import Chart from "./components/graph/Chart";
+import Chart from "./components/graphPage/graph/Chart";
 
 interface State {
     theme: Theme;
@@ -22,8 +22,10 @@ export default class App extends Component<{}, State> {
             theme: themes.dark,
         };
 
-        this.toggleTheme = () => {
+        this.changeTheme();
 
+        this.toggleTheme = () => {
+            this.changeTheme();
             this.setState(state => ({
                 theme:
                     state.theme === themes.dark
@@ -32,6 +34,24 @@ export default class App extends Component<{}, State> {
             }));
         };
     }
+
+    componentDidUpdate(prevProps: Readonly<{}>, prevState: Readonly<State>, snapshot?: any): void {
+        if (prevState.theme !== this.state.theme) {
+            this.changeTheme()
+        }
+    }
+
+    changeTheme = () => {
+        const bodyClasses = document.body.classList;
+        const curTheme = this.state.theme === themes.dark ?
+            'dark' : 'light';
+
+        while (bodyClasses.length > 0) {
+            bodyClasses.remove(bodyClasses[bodyClasses.length-1])
+        }
+        bodyClasses.toggle(curTheme);
+    };
+
 
 
     render() {
@@ -46,7 +66,7 @@ export default class App extends Component<{}, State> {
             </Switch>
         );
         return (
-            <div style={theme}>
+            <div>
                 <ThemeContext.Provider value={{theme, toggleTheme}}>
                     <Layout changeTheme={this.toggleTheme}>
                         <Suspense fallback={<div>...Loading</div>}>

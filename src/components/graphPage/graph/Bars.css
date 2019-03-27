@@ -1,0 +1,8 @@
+.bar:hover {
+    cursor: pointer;
+    outline: 3px solid whitesmoke;
+}
+
+tspan {
+    color: white;
+}

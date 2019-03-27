@@ -10,4 +10,14 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.dark {
+  color: #eeeeee;
+  background-color: #3c3f41;
+}
+
+.light {
+  color: #3c3f41;
+  background-color: #eeeeee;
+}
+
 
