@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {scaleBand, scaleLinear} from 'd3'
 import * as _ from 'lodash'
 
-import json from '../../data/data'
+import json from '../../../data/data'
 import Axes from "./Axes";
 import Bars from "./Bars";
 import Line from "./Line";
@@ -22,10 +22,11 @@ export default class Chart extends Component {
 
         this.xScale = scaleBand();
         this.yScale = scaleLinear();
+        this.svgRef = React.createRef();
     }
 
     componentDidMount() {
-        const {dataJson, maxValue} = this.state;
+        const {dataJson} = this.state;
         const {data} = dataJson;
         const newData = [];
         let maxValCalc = 0;
@@ -34,8 +35,6 @@ export default class Chart extends Component {
             const actual = _.parseInt(curr.leftovers.actual.replace(/ /g, ''));
             const plan = _.parseInt(curr.leftovers.plan.replace(/ /g, ''));
             const date = curr.date;
-
-
 
             if (i % 2 !== 0) {
                 const actualSum = prev.actual + actual;
@@ -53,33 +52,30 @@ export default class Chart extends Component {
     }
 
     render() {
-        const {dataNormal, maxValue} = this.state;
+        const {dataNormal, maxValue, dataJson} = this.state;
         const margins = {top: 50, right: 20, bottom: 100, left: 60};
         const svgDimensions = {width: 800, height: 500};
 
-
-        // scaleBand type
         const xScale = this.xScale
             .padding(0.5)
-            // scaleBand domain should be an array of specific values
-            // in our case, we want to use movie titles
             .domain(dataNormal.map(d => d.date))
             .range([margins.left, svgDimensions.width - margins.right]);
 
-        // scaleLinear type
+
         const yScale = this.yScale
-        // scaleLinear domain required at least two values, min and max
-            .domain([0, maxValue+maxValue/5])
+            .domain([0, maxValue + maxValue / 5])
             .range([svgDimensions.height - margins.bottom, margins.top]);
 
         return (
-            <svg width={svgDimensions.width} height={svgDimensions.height}>
+            <svg ref={this.svgRef} width={window.innerWidth} height={svgDimensions.height}>
                 <Axes
-                scales={{xScale, yScale}}
-                margins={margins}
-                svgDimensions={svgDimensions}
-            />
+                    scales={{xScale, yScale}}
+                    margins={margins}
+                    svgDimensions={svgDimensions}
+                />
                 <Bars
+                    json={dataJson}
+                    forwardRef={this.svgRef}
                     scales={{xScale, yScale}}
                     margins={margins}
                     data={dataNormal}

@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import * as d3Axis from 'd3'
-import { select as d3Select } from 'd3'
+import {select as d3Select} from 'd3'
 
 import './Axis.css'
 
@@ -21,6 +21,10 @@ export default class Axis extends Component {
             .tickPadding([12])
             .ticks([4]);
 
+        if (this.props.orient === 'Bottom') {
+            axis.tickSizeInner(0)
+        }
+
         d3Select(this.axisElement).call(axis)
     }
 
@@ -28,7 +32,9 @@ export default class Axis extends Component {
         return (
             <g
                 className={`Axis Axis-${this.props.orient}`}
-                ref={(el) => { this.axisElement = el; }}
+                ref={(el) => {
+                    this.axisElement = el;
+                }}
                 transform={this.props.translate}
             />
         )
