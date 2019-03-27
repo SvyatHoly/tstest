@@ -1,52 +1,39 @@
-import React, {Component} from 'react'
+import React, {createRef, useEffect, useState} from 'react'
 import * as d3 from 'd3'
 import {interpolateLab, scaleLinear} from 'd3'
 import './Bars.css'
 import Aux from '../../../hoc/Aux/Aux'
 
-export default class Bars extends Component {
+const bars = (props) => {
+    const {data, forwardRef, scales, margins, svgDimensions, json, maxVal} = props;
 
-    constructor(props) {
-        super(props);
+    const [sRef, setSRef] = useState(null);
 
-        this.state = {
-            x: 0,
-            sRef: null,
-            attr: null,
-            isChanged: false
-        };
+    useEffect(() => {
+        const refArr = data.map(el => ({ref: createRef(), id: el.date}));
+        setSRef(refArr);
+    }, [null]);
 
-        this.green = scaleLinear()
-            .domain([0, this.props.maxValue])
-            .range(['#F3E5F5', '#40a200'])
-            .interpolate(interpolateLab);
+    const green = scaleLinear()
+        .domain([0, maxVal])
+        .range(['#F3E5F5', '#40a200'])
+        .interpolate(interpolateLab);
 
-        this.red = scaleLinear()
-            .domain([0, this.props.maxValue])
-            .range(['#F3E5F5', '#a20a19'])
-            .interpolate(interpolateLab);
-    }
+    const red = scaleLinear()
+        .domain([0, maxVal])
+        .range(['#a20a19', '#f57863'])
+        .interpolate(interpolateLab);
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        const {data} = this.props;
 
-        if (prevProps.data !== data) {
-            const refArr = data.map(el => ({ref: React.createRef(), id: el.date}));
-            this.setState({sRef: refArr});
-        }
-    }
+    const attributes = [];
 
-    attributes = [];
-
-    barClickHandler = (id) => {
-        const {sRef} = this.state;
-        const {json} = this.props;
-        const data = json.data.filter(x => x.date === id);
+    const barClickHandler = (id) => {
+        const data = json.filter(x => x.date === id);
 
         const textData = JSON.stringify(data);
         const refById = sRef.find(x => x.id === id).ref;
         let el = d3.select(refById.current);
-        if (this.attributes.length === 0 || this.attributes[0].id !== id) {
+        if (attributes.length === 0 || attributes[0].id !== id) {
             const node = {
                 el: el,
                 id: id,
@@ -57,20 +44,18 @@ export default class Bars extends Component {
                 fill: el._groups[0][0].attributes[5].nodeValue,
                 show: true
             };
-            this.attributes.push(node);
-            this.barTransition(node, textData);
+            attributes.push(node);
+            barTransition(node, textData);
         } else {
-            this.barTransition({...this.attributes.pop(), show: false}, textData);
+            barTransition({...attributes.pop(), show: false}, textData);
         }
 
-        while (this.attributes.length > 1) {
-            this.barTransition({...this.attributes.shift(), show: false}, textData)
+        while (attributes.length > 1) {
+            barTransition({...attributes.shift(), show: false}, textData)
         }
     };
 
-    barTransition = (node, textData) => {
-
-        const {forwardRef} = this.props;
+    const barTransition = (node, textData) => {
         let svg = d3.select(forwardRef.current);
         const {x, y, height, width, fill, el, show, id} = node;
 
@@ -123,46 +108,59 @@ export default class Bars extends Component {
         }
     };
 
+    const {xScale, yScale} = scales;
+    const {height} = svgDimensions;
 
-    render() {
-        const {scales, margins, data, svgDimensions} = this.props;
-        const {sRef} = this.state;
-        const {xScale, yScale} = scales;
-        const {height} = svgDimensions;
-        let bars = null;
+    let bars = null;
 
-        if (sRef) {
-            bars = data.map((datum, i) => {
-                const yPlan = yScale(datum.plan);
-                const y = yScale(datum.actual) - 10;
-                return (
-                    <Aux key={datum.date}>
-                        <text
+    if (sRef) {
+        bars = data.map((datum, i) => {
+            const yPlan = yScale(datum.planSum);
+            const y = yScale(datum.actualSum) - 10;
 
-                            x={xScale(datum.date) - 10}
-                            y={Math.abs(yPlan - y) > 20 ? y : y - 20}
-                            fill={'#c6cfc9'}
-                        >
-                            {datum.actual}
-                        </text>
-                        <rect
-                            ref={sRef[i].ref}
-                            className="bar"
-                            x={xScale(datum.date)}
-                            y={yScale(datum.actual)}
-                            height={(height - margins.bottom - Math.abs(yScale(datum.actual)))}
-                            width={xScale.bandwidth()}
-                            fill={datum.actual >= datum.plan ?
-                                this.green(datum.actual) : this.red(datum.actual)}
-                            onClick={() => this.barClickHandler(datum.date)}
-                        />
-                    </Aux>
-                )
-            })
-        }
+            const fillColor = () => {
+                if (datum.actualSum === 0) {
+                    return '#808580'
+                } else if (datum.actualSum >= datum.planSum) {
+                    return green(datum.actualSum)
+                } else {
+                    return red(datum.actualSum)
+                }
+            };
 
-        return (
-            <g>{bars}</g>
-        )
+            const heightCalc = () => {
+                if (datum.actualSum === 0) {
+                    return height - margins.bottom - Math.abs(yScale(datum.planSum))
+                } else {
+                    return height - margins.bottom - Math.abs(yScale(datum.actualSum))
+                }
+            };
+
+            return (
+                <Aux key={datum.date}>
+                    <text
+                        x={xScale(datum.date) - 10}
+                        y={Math.abs(yPlan - y) > 20 ? y : y - 20}
+                        fill={'#dedddd'}
+                    >
+                        {datum.actualSum === 0 ? null : datum.actualSum}
+                    </text>
+                    <rect
+                        ref={sRef[i].ref}
+                        className="bar"
+                        x={xScale(datum.date)}
+                        y={yScale(datum.actualSum === 0 ? datum.planSum : datum.actualSum)}
+                        height={heightCalc()}
+                        width={xScale.bandwidth()}
+                        fill={fillColor()}
+                        onClick={() => barClickHandler(datum.date)}
+                    />
+                </Aux>
+            )
+        })
     }
-}
+
+    return <g>{bars}</g>
+};
+
+export default bars;

@@ -6,7 +6,7 @@ import Posts from "./components/posts/Posts"
 import FullPost from "./components/posts/fullPost/FullPost"
 import ThemeContext, {Theme, themes} from './context/ThemeContext'
 import './App.css'
-import Chart from "./components/graphPage/graph/Chart";
+import GraphPage from "./components/graphPage/graphPage";
 
 interface State {
     theme: Theme;
@@ -47,12 +47,10 @@ export default class App extends Component<{}, State> {
             'dark' : 'light';
 
         while (bodyClasses.length > 0) {
-            bodyClasses.remove(bodyClasses[bodyClasses.length-1])
+            bodyClasses.remove(bodyClasses[bodyClasses.length - 1])
         }
         bodyClasses.toggle(curTheme);
     };
-
-
 
     render() {
         const {theme} = this.state;
@@ -62,7 +60,7 @@ export default class App extends Component<{}, State> {
             <Switch>
                 <Route path={'/posts'} exact component={Posts}/>}/>
                 <Route path={'/posts/:id'} component={FullPost}/>
-                <Route path={'/graph'} component={Chart}/>
+                <Route path={'/graph'} component={GraphPage}/>
             </Switch>
         );
         return (
