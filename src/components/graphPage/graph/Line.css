@@ -1,13 +1,6 @@
-/*.solid{*/
-    /*stroke: solid;*/
-/*}*/
-
-.dashed{
-    stroke-dasharray: 5,5;
-}
 
 .line {
-    fill: none;
-    stroke: #ffab00;
-    stroke-width: 3px;
-}
+     fill: none;
+     stroke: #ffab00;
+     stroke-width: 3px;
+ }

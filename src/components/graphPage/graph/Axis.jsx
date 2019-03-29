@@ -5,13 +5,13 @@ import {select as d3Select} from 'd3'
 import './Axis.css'
 
 const axis = (props) => {
-    const {translate, orient, scale, tickSize} = props;
+    const {translate, orient, scale, tickSize, forwardRef} = props;
 
     const axisElement = useRef(null);
 
     useEffect(() => {
         renderAxis()
-    }, [null]);
+    }, [forwardRef]);
 
     const renderAxis = () => {
         const axisType = `axis${orient}`;
@@ -26,6 +26,10 @@ const axis = (props) => {
         }
 
         d3Select(axisElement.current).call(axis)
+            .attr('opacity', 0)
+            .transition()
+            .duration(2500)
+            .attr('opacity', 1)
     };
 
     return (

@@ -4,13 +4,23 @@ import jsonFromServer from '../../data/data';
 import * as _ from "lodash";
 import pathChecker from '../../util/pathChecker';
 
+export const GraphContext = React.createContext({
+    isShown: false,
+    click: () => {}
+});
+
 const graphPage = () => {
 
     const [data, setData] = useState(jsonFromServer.data);
     const [normalData, setNormalData] = useState(null);
     const [maxVal, setMaxVal] = useState(0);
+    const [isShown, setIsShown] = useState(false);
 
     useEffect(() => {
+        normalizeData()
+    }, [null]);
+
+    const normalizeData = () => {
         const newData = [];
         let maxValCalc = 0;
 
@@ -45,16 +55,31 @@ const graphPage = () => {
 
         setNormalData(newData);
         setMaxVal(maxValCalc);
-
-    }, [null]);
+    };
 
     let chart = null;
 
+    const startClickHandler = () => {
+        setIsShown(true)
+    };
+
     if (normalData) {
-        chart = <Chart data={normalData} maxVal={maxVal} json={jsonFromServer.data}/>
+        chart = <Chart
+            data={normalData}
+            maxVal={maxVal}
+            json={jsonFromServer.data}
+            start={startClickHandler}/>
     }
 
-    return chart
+    return (
+        <GraphContext.Provider value={{
+            isShown: isShown,
+            click: startClickHandler
+        }}>
+            {chart}
+        </GraphContext.Provider>
+    )
+
 };
 
 

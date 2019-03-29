@@ -1,13 +1,20 @@
-import React, {useRef} from 'react'
+import React, {useContext, useRef} from 'react'
 import {scaleBand, scaleLinear} from 'd3'
-
+import Aux from '../../../hoc/Aux/Aux'
 import Axes from "./Axes";
 import Bars from "./Bars";
 import Line from "./Line";
+import Canvas from "./Canvas";
+import {GraphContext} from "../graphPage";
 
 const chart = (props) => {
 
-    const svgRef = useRef(null);
+    const level1 = useRef(null);
+    const level2 = useRef(null);
+    const level3 = useRef(null);
+
+    const context = useContext(GraphContext);
+
 
     const {data, maxVal} = props;
     const margins = {top: 50, right: 20, bottom: 100, left: 60};
@@ -24,30 +31,59 @@ const chart = (props) => {
 
     const scales = {xScale, yScale};
 
+    let content = null;
+
+    if (context.isShown) {
+        content = (
+            <Aux>
+                <Axes
+                    forwardRef={level2}
+                    scales={scales}
+                    margins={margins}
+                    svgDimensions={svgDimensions}
+                />
+
+                <Line
+                    forwardRef={level1}
+                    scales={scales}
+                    margins={margins}
+                    data={data}
+                    maxVal={maxVal}
+                    svgDimensions={svgDimensions}
+                />
+
+                <Bars
+                    json={props.json}
+                    forwardRef={level2}
+                    scales={scales}
+                    margins={margins}
+                    data={data}
+                    maxVal={maxVal}
+                    svgDimensions={svgDimensions}
+                />
+            </Aux>
+        )
+    }
+
     return (
-        <svg ref={svgRef} width={window.innerWidth} height={svgDimensions.height}>
-            <Axes
-                scales={scales}
-                margins={margins}
-                svgDimensions={svgDimensions}
-            />
-            <Bars
-                json={props.json}
-                forwardRef={svgRef}
-                scales={scales}
-                margins={margins}
-                data={data}
-                maxVal={maxVal}
-                svgDimensions={svgDimensions}
-            />
-            <Line
-                forwardRef={svgRef}
-                scales={scales}
-                margins={margins}
-                data={data}
-                maxVal={maxVal}
-                svgDimensions={svgDimensions}
-            />
+        <svg width={window.innerWidth} height={svgDimensions.height}>
+            <g ref={level1}>
+                <g ref={level2}>
+                    <g ref={level3}>
+                        <Canvas
+                            forwardRef={level3}
+                            scales={scales}
+                            margins={margins}
+                            data={data}
+                            maxVal={maxVal}
+                            svgDimensions={svgDimensions}
+                        />
+                    </g>
+                    {content}
+                </g>
+            </g>
+
+
         </svg>
     )
 };
