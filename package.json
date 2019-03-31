@@ -35,6 +35,10 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-plugin-react": "^7.12.4",
+    "tslint": "^5.14.0",
+    "tslint-react": "^4.0.0",
     "typed-css-modules": "^0.4.2"
   }
 }
