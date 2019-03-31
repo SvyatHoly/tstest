@@ -7,8 +7,8 @@ const navBar = () => {
     return (
         <div className={classes.navbar}>
             <NavBarItem link={'/posts'} exact={true}>Posts</NavBarItem>
-            <NavBarItem link={'/graph'} exact={true}>Second</NavBarItem>
-            <NavBarItem link={'/3'} exact={true}>Third</NavBarItem>
+            <NavBarItem link={'/graph'} exact={true}>Data Visualisation</NavBarItem>
+            <NavBarItem link={'/refactor'} exact={true}>Third</NavBarItem>
             <Switcher/>
         </div>
     )
