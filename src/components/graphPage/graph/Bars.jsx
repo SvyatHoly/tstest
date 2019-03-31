@@ -1,71 +1,66 @@
-import React, {createRef, useEffect, useRef, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import * as d3 from 'd3'
 import {interpolateLab, scaleLinear} from 'd3'
 import './Bars.css'
 
+/**
+ * Component render bars to the chart
+ */
 const bars = (props) => {
-    const {data, forwardRef, scales, margins, svgDimensions, json, maxVal} = props;
+    const {data, forwardRef, scales, margins, dimensions, maxVal} = props;
     const {xScale, yScale} = scales;
-    const {height} = svgDimensions;
+    const {height} = dimensions;
 
-    const [sRef, setSRef] = useState(null);
     const [locData, setLocData] = useState(null);
 
+    /***
+     * When component did mount create an array of x,y and other data for each bar
+     */
     useEffect(() => {
-        const refArr = data.map(el => ({ref: createRef(), id: el.date}));
-        setSRef(refArr);
+        calcBarsPosition()
     }, [null]);
 
-    useEffect(() => {
-        if (sRef) {
-            calcBarsPosition()
-
-        }
-    }, [sRef]);
-
+    /***
+     * When location data is ready - start render bars
+     */
     useEffect(() => {
         if (locData) {
-            createAnimation()
+            renderBars()
         }
     }, [locData]);
 
     const calcBarsPosition = () => {
         const locationData = [];
-        data.forEach((datum, i) => {
-            const yPlan = yScale(datum.planSum);
-            const y = yScale(datum.actualSum) - 10;
 
-            const fillColor = () => {
-                if (datum.actualSum === 0) {
-                    return '#808580'
-                } else if (datum.actualSum >= datum.planSum) {
-                    return green(datum.actualSum)
-                } else {
-                    return red(datum.actualSum)
-                }
-            };
+        data.forEach(item => {
+            const {planSum, actualSum, date} = item;
+            const yPlan = yScale(planSum);
+            const yActual = yScale(actualSum) - 10;
+            const id = date.replace(/\.+/g, '');
 
             const heightCalc = () => {
-                if (datum.actualSum === 0) {
-                    return height - margins.bottom - Math.abs(yScale(datum.planSum))
+                if (actualSum === 0) {
+                    return height - margins.bottom - Math.abs(yScale(planSum))
                 } else {
-                    return height - margins.bottom - Math.abs(yScale(datum.actualSum))
+                    return height - margins.bottom - Math.abs(yScale(actualSum))
                 }
             };
-            const x = xScale(datum.date);
+            const x = xScale(date);
+
+            const fill = setColor(actualSum, planSum);
 
             const obj = {
-                actualSum: datum.actualSum,
-                date: datum.date,
+                actualSum,
+                planSum,
+                date,
+                id,
+                fill,
                 textX: x - 10,
-                textY: Math.abs(yPlan - y) > 20 ? y : y - 20,
-                ref: sRef[i].ref,
+                textY: Math.abs(yPlan - yActual) > 20 ? yActual : yActual - 20,
                 rectX: x,
-                rectY: yScale(datum.actualSum === 0 ? datum.planSum : datum.actualSum),
+                rectY: yScale(actualSum === 0 ? planSum : actualSum),
                 height: heightCalc(),
                 width: xScale.bandwidth(),
-                fill: fillColor(),
-                onClick: () => barClickHandler(datum.date)
             };
 
             locationData.push(obj);
@@ -74,55 +69,84 @@ const bars = (props) => {
         setLocData(locationData);
     };
 
+    const setColor = (actualSum, planSum) => {
+
+        const setGreen = scaleLinear()
+            .domain([0, maxVal])
+            .range(['#F3E5F5', '#40a200'])
+            .interpolate(interpolateLab);
+
+        const setRed = scaleLinear()
+            .domain([0, maxVal])
+            .range(['#a20a19', '#f57863'])
+            .interpolate(interpolateLab);
+
+        if (actualSum === 0) {
+            return '#808580';
+        } else if (actualSum >= planSum) {
+            return setGreen(actualSum)
+        } else {
+            return setRed(actualSum);
+        }
+    };
+
     const attributes = [];
 
-    const createAnimation = () => {
+    const renderBars = () => {
 
-        locData.forEach((el, i) => {
+        locData.forEach((item, i) => {
+            const {id, rectX, rectY, textX, textY, height, width, fill, actualSum} = item;
 
             setTimeout(() => createBar(), i * 100);
 
             const createBar = () => {
-                d3.select(forwardRef.current)
+                const svg = d3.select(forwardRef.current);
+                svg
                     .append('rect')
-                    .attr('ref', el.ref.current)
-                    .attr('x', el.rectX)
-                    .attr('y', el.height + el.rectY)
-                    .attr('width', el.width)
+                    .attr('x', rectX)
+                    .attr('y', height + rectY)
+                    .attr('width', width)
                     .attr('height', 0)
-                    .attr('fill', el.fill)
-                    .attr('id', 'bar' + el.date.replace(/\.+/g, ''))
+                    .attr('fill', fill)
+                    .attr('id', 'bar' + id)
                     .attr('class', 'bar')
-                    .on('click', () => barClickHandler(el.date))
+                    .on('click', () => barClickHandler(id))
                     .transition()
                     .duration(1000)
-                    .attr('y', el.rectY)
-                    .attr('height', el.height)
-                    .attr('fill', el.fill)
+                    .attr('y', rectY)
+                    .attr('height', height)
+                    .attr('fill', fill);
+
+                const text = svg.append('text')
+                    .text(actualSum === 0 ? null : actualSum)
+                    .attr('x', textX)
+                    .attr('y', textY)
+                    .attr('fill', 'white')
+                    .attr('opacity', 0);
+
+                text.transition()
+                    .delay(300)
+                    .duration(1000)
+                    .attr('opacity', 1)
+
             }
         })
     };
 
-    const green = scaleLinear()
-        .domain([0, maxVal])
-        .range(['#F3E5F5', '#40a200'])
-        .interpolate(interpolateLab);
-
-    const red = scaleLinear()
-        .domain([0, maxVal])
-        .range(['#a20a19', '#f57863'])
-        .interpolate(interpolateLab);
-
+    /**
+     * @param id идентификатор
+     * @returns ничего не возвращает
+     * */
     const barClickHandler = (id) => {
-        const dataMy = data.filter(x => x.date === id);
+        const dataMy = data.filter(x => x.date.replace(/\.+/g, '') === id);
 
         const textData = JSON.stringify(dataMy);
 
-        let el = d3.select('#bar' + id.replace(/\.+/g, ''));
+        let el = d3.select('#bar' + id);
         if (attributes.length === 0 || attributes[0].id !== id) {
             const node = {
-                el: el,
-                id: id,
+                el,
+                id,
                 x: el.attr('x'),
                 y: el.attr('y'),
                 height: el.attr('height'),
@@ -130,20 +154,23 @@ const bars = (props) => {
                 fill: el.attr('fill'),
                 show: true
             };
+
             attributes.push(node);
+
             barTransition(node, textData);
+
         } else {
             barTransition({...attributes.pop(), show: false}, textData);
         }
 
         while (attributes.length > 1) {
-            barTransition({...attributes.shift(), show: false}, textData)
+            barTransition({...attributes.shift(), show: false}, textData);
         }
     };
 
-    const barTransition = (node, textData) => {
+    const barTransition = (item, textData) => {
         let svg = d3.select(forwardRef.current);
-        const {x, y, height, width, fill, el, show, id} = node;
+        const {x, y, height, width, fill, el, show, id} = item;
 
         const text = svg.append('text');
 
@@ -154,12 +181,12 @@ const bars = (props) => {
                     .text(el.replace(/[[\]}{"]+/g, ' '))
                     .attr('dy', '1em')
                     .attr('x', 2000)
-                    .attr('class', 'text' + id.replace(/\.+/g, ''))
+                    .attr('class', 'text' + id)
             });
             text
                 .attr("y", 150)
                 .attr("x", 2000)
-                .attr('id', 'text' + id.replace(/\.+/g, ''));
+                .attr('id', 'text' + id);
 
 
             el.transition()
@@ -170,19 +197,20 @@ const bars = (props) => {
                 .attr('height', 300)
                 .attr('fill', '#5f9cb1')
                 .on("start", () => {
-                    svg.selectAll('.text' + id.replace(/\.+/g, ''))
+                    svg.selectAll('.text' + id)
                         .transition()
                         .duration(800)
                         .attr("x", 950);
                 })
         } else {
             const tspan = svg.selectAll('tspan');
+
             tspan
                 .transition()
                 .duration(800)
                 .attr("x", 2000)
                 .on('end', () => {
-                    d3.select('#text' + id.replace(/\.+/g, '')).remove()
+                    d3.select('#text' + id).remove()
                 });
             el.transition()
                 .duration(800)
@@ -193,7 +221,7 @@ const bars = (props) => {
                 .attr('fill', fill)
         }
     };
-    
+
     return null;
 };
 

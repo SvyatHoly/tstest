@@ -1,7 +1,7 @@
-import * as React from "react"
-import {Component, Suspense} from "react"
-import {Route, Switch} from 'react-router-dom'
-import Layout from './hoc/Layout/Layout'
+import React from "react";
+import {Component, Suspense} from "react";
+import {Route, Switch} from 'react-router-dom';
+import Layout from './hoc/Layout/Layout';
 import Posts from "./components/posts/Posts"
 import FullPost from "./components/posts/fullPost/FullPost"
 import ThemeContext, {Theme, themes} from './context/ThemeContext'

@@ -1,5 +1,5 @@
 import React, {useContext, useRef} from 'react'
-import {scaleBand, scaleLinear} from 'd3'
+import {scaleBand, scaleLinear} from 'd3';
 import Aux from '../../../hoc/Aux/Aux'
 import Axes from "./Axes";
 import Bars from "./Bars";
@@ -7,66 +7,68 @@ import Line from "./Line";
 import Canvas from "./Canvas";
 import {GraphContext} from "../graphPage";
 
+/**
+ * Component render svg and holds all graph elements into
+ * */
 const chart = (props) => {
 
+    // we can render elements on different z-axis levels
     const level1 = useRef(null);
     const level2 = useRef(null);
     const level3 = useRef(null);
 
     const context = useContext(GraphContext);
 
-
     const {data, maxVal} = props;
     const margins = {top: 50, right: 20, bottom: 100, left: 60};
-    const svgDimensions = {width: 800, height: 500};
+    const dimensions = {width: 800, height: 500};
 
     const yScale = scaleLinear()
         .domain([0, maxVal + maxVal / 5])
-        .range([svgDimensions.height - margins.bottom, margins.top]);
+        .range([dimensions.height - margins.bottom, margins.top]);
 
     const xScale = scaleBand()
         .padding(0.5)
         .domain(data.map(d => d.date))
-        .range([margins.left, svgDimensions.width - margins.right]);
+        .range([margins.left, dimensions.width - margins.right]);
 
     const scales = {xScale, yScale};
 
-    let content = null;
-
-    if (context.isShown) {
-        content = (
-            <Aux>
-                <Axes
-                    forwardRef={level2}
-                    scales={scales}
-                    margins={margins}
-                    svgDimensions={svgDimensions}
-                />
-
-                <Line
-                    forwardRef={level1}
-                    scales={scales}
-                    margins={margins}
-                    data={data}
-                    maxVal={maxVal}
-                    svgDimensions={svgDimensions}
-                />
-
-                <Bars
-                    json={props.json}
-                    forwardRef={level2}
-                    scales={scales}
-                    margins={margins}
-                    data={data}
-                    maxVal={maxVal}
-                    svgDimensions={svgDimensions}
-                />
-            </Aux>
-        )
-    }
+    // if user clicked on the show button - start render
+    const renderElements = () => {
+        if (context.isRenderStarted) {
+            return (
+                <Aux>
+                    <Line
+                        forwardRef={level1}
+                        scales={scales}
+                        margins={margins}
+                        data={data}
+                        maxVal={maxVal}
+                        dimensions={dimensions}
+                    />
+                    <Axes
+                        forwardRef={level2}
+                        scales={scales}
+                        margins={margins}
+                        dimensions={dimensions}
+                    />
+                    <Bars
+                        json={props.json}
+                        forwardRef={level2}
+                        scales={scales}
+                        margins={margins}
+                        data={data}
+                        maxVal={maxVal}
+                        dimensions={dimensions}
+                    />
+                </Aux>
+            )
+        }
+    };
 
     return (
-        <svg width={window.innerWidth} height={svgDimensions.height}>
+        <svg width={window.innerWidth} height={500}>
             <g ref={level1}>
                 <g ref={level2}>
                     <g ref={level3}>
@@ -76,14 +78,12 @@ const chart = (props) => {
                             margins={margins}
                             data={data}
                             maxVal={maxVal}
-                            svgDimensions={svgDimensions}
+                            dimensions={dimensions}
                         />
                     </g>
-                    {content}
+                    {renderElements()}
                 </g>
             </g>
-
-
         </svg>
     )
 };

@@ -1,23 +1,33 @@
 import React, {useEffect, useState} from 'react';
 import Chart from './graph/Chart';
 import jsonFromServer from '../../data/data';
-import * as _ from "lodash";
+import _ from "lodash";
 import pathChecker from '../../util/pathChecker';
 
+/**
+ * Context allow components to check whether they need to start render itself
+ * */
 export const GraphContext = React.createContext({
-    isShown: false,
-    click: () => {}
+    isRenderStarted: false,
+    startRenderGraphComponents: () => {}
 });
 
+
+/**
+ * This component convert data to more usable format,
+ * reducing two nodes with same 'date' to one node with sum of 'actual and 'plan',
+ * and send 'normalData' to Chart.
+ * */
 const graphPage = () => {
 
-    const [data, setData] = useState(jsonFromServer.data);
+    const {data} = jsonFromServer;
+
     const [normalData, setNormalData] = useState(null);
     const [maxVal, setMaxVal] = useState(0);
-    const [isShown, setIsShown] = useState(false);
+    const [isRenderStarted, setIsRenderStarted] = useState(false);
 
     useEffect(() => {
-        normalizeData()
+        normalizeData();
     }, [null]);
 
     const normalizeData = () => {
@@ -25,31 +35,37 @@ const graphPage = () => {
         let maxValCalc = 0;
 
         data.reduce((prev, curr, i) => {
+            //check path to undefined values
             const actualChecked = pathChecker(['leftovers', 'actual'], curr);
             const planChecked = pathChecker(['leftovers', 'plan'], curr);
-            const sectorChecked = pathChecker(['sector'], curr);
+            const sector = pathChecker(['sector'], curr);
             const date = pathChecker(['date'], curr);
 
+            //convert string value to number
             const actual = _.parseInt(actualChecked.replace(/ /g, ''));
             const plan = _.parseInt(planChecked.replace(/ /g, ''));
 
-
+            // if index is even - sum values and push object to 'newData' array
             if (i % 2 !== 0) {
                 const actualSum = prev.actual + actual;
                 const planSum = prev.plan + plan;
-                const curNode = {actual: actual, plan: plan, sector: sectorChecked};
+
+                const curNode = {actual, plan, sector};
+
                 const divided = [curNode, prev];
 
+                // take max value
                 if (actualSum > maxValCalc) {
                     maxValCalc = actualSum;
                 }
 
-                newData.push({date: date, actualSum: actualSum, planSum: planSum, divided: divided});
+                newData.push({date, actualSum, planSum, divided});
 
                 return null;
 
+            //else take value to next iteration
             } else {
-                return {actual: actual, plan: plan, sector: sectorChecked}
+                return {actual, plan, sector}
             }
         }, 0);
 
@@ -57,30 +73,35 @@ const graphPage = () => {
         setMaxVal(maxValCalc);
     };
 
-    let chart = null;
-
-    const startClickHandler = () => {
-        setIsShown(true)
+    /**
+     * handle user click on 'show' button */
+    const onStartClickHandler = () => {
+        setIsRenderStarted(true)
     };
-
-    if (normalData) {
-        chart = <Chart
-            data={normalData}
-            maxVal={maxVal}
-            json={jsonFromServer.data}
-            start={startClickHandler}/>
-    }
+    /** Whether data is normalised send it to chart component */
+    const renderChart = () => {
+        if (normalData) {
+            return (
+                <Chart
+                    data={normalData}
+                    maxVal={maxVal}
+                    onStart={onStartClickHandler}
+                />
+            )
+        } else return null;
+    };
 
     return (
         <GraphContext.Provider value={{
-            isShown: isShown,
-            click: startClickHandler
+            isRenderStarted: isRenderStarted,
+            startRenderGraphComponents: onStartClickHandler
         }}>
-            {chart}
+
+            {renderChart()}
+
         </GraphContext.Provider>
     )
 
 };
-
 
 export default graphPage;

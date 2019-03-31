@@ -3,9 +3,9 @@ import * as d3 from 'd3'
 import './Line.css'
 
 const line = (props) => {
-    const {scales, margins, data, svgDimensions, forwardRef} = props;
+    const {scales, margins, data, dimensions, forwardRef} = props;
     const {xScale, yScale} = scales;
-    const {width} = svgDimensions;
+    const {width} = dimensions;
 
     const [lineData, setLinePath] = useState(null);
     const [curDate, setCurDate] = useState(null);
