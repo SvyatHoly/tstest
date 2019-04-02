@@ -1,9 +1,15 @@
-import React, {useContext, useEffect} from 'react'
-import * as d3 from 'd3'
+import {useContext, useEffect} from 'react';
+import * as d3 from 'd3';
 import {GraphContext} from "../graphPage";
+import * as PropTypes from 'prop-types';
 
-const canvas = (props) => {
-    const {margins, dimensions, forwardRef} = props;
+canvas.propTypes = {
+    margins: PropTypes.object,
+    dimensions: PropTypes.object,
+    forwardRef: PropTypes.object
+};
+
+export default function canvas ({margins, dimensions, forwardRef})  {
     const {width, height} = dimensions;
 
     const context = useContext(GraphContext);
@@ -50,7 +56,7 @@ const canvas = (props) => {
                 .duration(1400)
                 .attr("width", width + margins.right)
                 .attr("height", height)
-                .on('end', () => d3.select('#canvas').remove())
+                .on('end', () => d3.select('#canvas').remove());
 
             rect.transition('position')
                 .delay(300)
@@ -60,12 +66,10 @@ const canvas = (props) => {
             text.transition('text')
                 .duration(1000)
                 .attr('opacity', 0)
-                .on('end', () => d3.select('#start-text').remove())
-        }
+                .on('end', () => d3.select('#start-text').remove());
+        };
     }, [null]);
 
     return null;
 
-};
-
-export default canvas;
+}

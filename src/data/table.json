@@ -1,0 +1,203 @@
+{
+  "fa": {
+    "nDynamicTypeID": 2,
+    "fa_data": {
+      "r": [
+        {
+          "fDeltaPlan": 17.2539,
+          "axis": {
+            "r": [
+              {
+                "sName_RU": "Сбербанк РФ"
+              },
+              {
+                "sName_RU": "Внутренний банк"
+              }
+            ]
+          },
+          "sMeasDelta_RU": "млрд. руб."
+        },
+        {
+          "fDeltaPlan": 4.84149,
+          "axis": {
+            "r": [
+              {
+                "sName_RU": "Сбербанк РФ"
+              },
+              {
+                "sName_RU": "КБ"
+              }
+            ]
+          },
+          "sMeasDelta_RU": "млрд. руб."
+        },
+        {
+          "fDeltaPlan": 3.98416,
+          "axis": {
+            "r": [
+              {
+                "sName_RU": "Сбербанк РФ"
+              },
+              {
+                "sName_RU": "CIB"
+              }
+            ]
+          },
+          "sMeasDelta_RU": "млрд. руб."
+        },
+        {
+          "fDeltaPlan": 0.86389,
+          "axis": {
+            "r": [
+              {
+                "sName_RU": "Дочерние организации"
+              },
+              {
+                "sName_RU": "CIB"
+              }
+            ]
+          },
+          "sMeasDelta_RU": "млрд. руб."
+        },
+        {
+          "fDeltaPlan": 0.7123,
+          "axis": {
+            "r": [
+              {
+                "sName_RU": "Дочерние организации"
+              },
+              {
+                "sName_RU": "РБ"
+              }
+            ]
+          },
+          "sMeasDelta_RU": "млрд. руб."
+        },
+        {
+          "fDeltaPlan": 0.52162,
+          "axis": {
+            "r": [
+              {
+                "sName_RU": "Консолидация"
+              },
+              {
+                "sName_RU": "РБ"
+              }
+            ]
+          },
+          "sMeasDelta_RU": "млрд. руб."
+        },
+        {
+          "fDeltaPlan": 0.28302,
+          "axis": {
+            "r": [
+              {
+                "sName_RU": "Сбербанк РФ"
+              },
+              {
+                "sName_RU": "SBI"
+              }
+            ]
+          },
+          "sMeasDelta_RU": "млрд. руб."
+        },
+        {
+          "fDeltaPlan": 0.04615,
+          "axis": {
+            "r": [
+              {
+                "sName_RU": "Дочерние организации"
+              },
+              {
+                "sName_RU": "КБ"
+              }
+            ]
+          },
+          "sMeasDelta_RU": "млрд. руб."
+        },
+        {
+          "fDeltaPlan": 0.02935,
+          "axis": {
+            "r": [
+              {
+                "sName_RU": "Консолидация"
+              },
+              {
+                "sName_RU": "КБ"
+              }
+            ]
+          },
+          "sMeasDelta_RU": "млрд. руб."
+        },
+        {
+          "fDeltaPlan": -3.23873,
+          "axis": {
+            "r": [
+              {
+                "sName_RU": "Сбербанк РФ"
+              },
+              {
+                "sName_RU": "Прочее"
+              }
+            ]
+          },
+          "sMeasDelta_RU": "млрд. руб."
+        },
+        {
+          "fDeltaPlan": -2.592,
+          "axis": {
+            "r": [
+              {
+                "sName_RU": "Сбербанк РФ"
+              },
+              {
+                "sName_RU": "РБ"
+              }
+            ]
+          },
+          "sMeasDelta_RU": "млрд. руб."
+        },
+        {
+          "fDeltaPlan": -2.3299,
+          "axis": {
+            "r": [
+              {
+                "sName_RU": "Дочерние организации"
+              },
+              {
+                "sName_RU": "SBI"
+              }
+            ]
+          },
+          "sMeasDelta_RU": "млрд. руб."
+        },
+        {
+          "fDeltaPlan": -0.97961,
+          "axis": {
+            "r": [
+              {
+                "sName_RU": "Дочерние организации"
+              },
+              {
+                "sName_RU": "Прочее"
+              }
+            ]
+          },
+          "sMeasDelta_RU": "млрд. руб."
+        }
+      ],
+      "axis": {
+        "r": [
+          {
+            "sAxisName": "Подразделение",
+            "nAxisID": 2
+          },
+          {
+            "sAxisName": "Сегмент",
+            "nAxisID": 3
+          }
+        ]
+      }
+    }
+  }
+}

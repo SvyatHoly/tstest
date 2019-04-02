@@ -1,16 +1,22 @@
-import React, {useContext, useRef} from 'react'
+import React, {useContext, useRef} from 'react';
 import {scaleBand, scaleLinear} from 'd3';
-import Aux from '../../../hoc/Aux/Aux'
+import * as PropTypes from 'prop-types';
+import Aux from '../../../hoc/Aux/Aux';
 import Axes from "./Axes";
 import Bars from "./Bars";
 import Line from "./Line";
 import Canvas from "./Canvas";
 import {GraphContext} from "../graphPage";
 
+chart.propTypes = {
+    data: PropTypes.array,
+    maxVal: PropTypes.number
+};
+
 /**
  * Component render svg and holds all graph elements into
  * */
-const chart = (props) => {
+export default function chart({data, maxVal}) {
 
     // we can render elements on different z-axis levels
     const level1 = useRef(null);
@@ -19,7 +25,6 @@ const chart = (props) => {
 
     const context = useContext(GraphContext);
 
-    const {data, maxVal} = props;
     const margins = {top: 50, right: 20, bottom: 100, left: 60};
     const dimensions = {width: 800, height: 500};
 
@@ -54,7 +59,6 @@ const chart = (props) => {
                         dimensions={dimensions}
                     />
                     <Bars
-                        json={props.json}
                         forwardRef={level2}
                         scales={scales}
                         margins={margins}
@@ -63,7 +67,7 @@ const chart = (props) => {
                         dimensions={dimensions}
                     />
                 </Aux>
-            )
+            );
         }
     };
 
@@ -85,7 +89,5 @@ const chart = (props) => {
                 </g>
             </g>
         </svg>
-    )
-};
-
-export default chart;
+    );
+}

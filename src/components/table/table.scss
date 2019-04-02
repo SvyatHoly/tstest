@@ -1,0 +1,63 @@
+
+tr:nth-child(even) {
+  background-color: rgba(0,0,0,0.2);
+}
+
+th {
+  padding: 20px;
+  text-align: center;
+  white-space: nowrap;
+
+  button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: inherit;
+  }
+}
+
+td {
+  padding: 5px 20px 5px 5px;
+  width: auto;
+}
+
+table {
+  border-spacing: 0;
+  border: none;
+  padding: 10px 10px 10px 50px ;
+
+}
+
+.indicator {
+  height: 100%;
+  display: grid;
+  grid-template-columns: auto 100px auto;
+  min-width: 280px;
+}
+
+.table-container {
+  padding-top: 30px;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+}
+
+.table {
+  width: 100%;
+  height: 100%;
+}
+
+.tablebar {
+  display: flex;
+  width: 80%;
+  background-color: rgba(94, 94, 94, 0.2);
+  border-radius: 6px;
+  div {
+    height: 13px;
+    border-radius: 6px;
+  }
+}
+
+
+

@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAEI,sBAAU;EACN,MAAM,EAAE,OAAO;AAEnB,UAAK;EACD,SAAS,EAAE,IAAI;EACf,IAAI,EAAE,OAAO;;AAIrB,iBAAkB;EACd,SAAS,EAAE,cAAc;EACzB,WAAW,EAAE,GAAG",
+"sources": ["Axis.scss"],
+"names": [],
+"file": "Axis.css"
+}

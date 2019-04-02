@@ -14,7 +14,8 @@ const navBarItem = (props: NavBarItemProps) => {
     return (
         <div className={classes.barItem}>
         <NavLink
-            activeClassName={classes.active}
+            className={classes.navlink}
+            activeStyle={{ color: 'white' }}
             to={props.link}
             exact={props.exact}
         >

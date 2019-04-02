@@ -1,8 +1,8 @@
 .bar:hover {
-    cursor: pointer;
-    outline: 3px solid whitesmoke;
-}
+  cursor: pointer;
+  outline: 2px solid #a4aba6; }
 
 tspan {
-    color: white;
-}
+  color: #a4aba6; }
+
+/*# sourceMappingURL=Bars.css.map */

@@ -1,4 +1,8 @@
-
+/**
+ * Boyer Moore Algorithm for Pattern Searching
+ * @param prefix
+ * @param text
+ */
 export function findSubString(prefix: string, text: string): number {
     const pr = getPrefix(prefix);
     const len = prefix.length;
