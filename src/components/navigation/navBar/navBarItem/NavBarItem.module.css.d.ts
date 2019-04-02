@@ -1,6 +1,6 @@
 declare const styles: {
   readonly "barItem": string;
-  readonly "active": string;
+  readonly "navlink": string;
 };
 export = styles;
 

@@ -59,7 +59,7 @@
     height: 5.5rem;
     border: none;
     border-radius: 3rem;
-    background: #dbc450;
+    background: #4f656d;
     cursor: pointer;
     overflow: hidden;
 .face {
@@ -90,10 +90,8 @@
     height: inherit;
     border: none;
     border-radius: inherit;
-    background: -webkit-gradient(linear, right top, left top, from(#77bbd7), to(#58cfd7));
-    background: -webkit-linear-gradient(right, #77bbd7, #58cfd7);
-    background: -o-linear-gradient(right, #77bbd7, #58cfd7);
-    background: linear-gradient(to left, #77bbd7, #58cfd7);
+
+    background: linear-gradient(to left, #77bbd7, #78a7b4);
     opacity: 0;
     -webkit-transition: all 0.45s ease-in-out;
     -o-transition: all 0.45s ease-in-out;

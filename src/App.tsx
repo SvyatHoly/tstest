@@ -4,13 +4,17 @@ import {Route, Switch} from 'react-router-dom';
 import Layout from './hoc/Layout/Layout';
 import Posts from "./components/posts/Posts"
 import FullPost from "./components/posts/fullPost/FullPost"
-import ThemeContext, {Theme, themes} from './context/ThemeContext'
 import './App.css'
 import GraphPage from "./components/graphPage/graphPage";
+import Table from './components/table/table';
 
-interface State {
-    theme: Theme;
-}
+export interface ThemeContextI { theme: string; toggleTheme: () => void }
+export const ThemeContext = React.createContext<ThemeContextI>({
+    theme: 'light',
+    toggleTheme: () => null
+});
+
+type State = { theme: string; }
 
 export default class App extends Component<{}, State> {
     toggleTheme: () => void;
@@ -19,18 +23,18 @@ export default class App extends Component<{}, State> {
         super(props);
 
         this.state = {
-            theme: themes.dark,
+            theme: 'dark',
         };
 
         this.changeTheme();
 
-        this.toggleTheme = () => {
+        this.toggleTheme = ():void => {
             this.changeTheme();
             this.setState(state => ({
                 theme:
-                    state.theme === themes.dark
-                        ? themes.light
-                        : themes.dark,
+                    state.theme === 'dark'
+                        ? 'light'
+                        : 'dark',
             }));
         };
     }
@@ -43,7 +47,7 @@ export default class App extends Component<{}, State> {
 
     changeTheme = () => {
         const bodyClasses = document.body.classList;
-        const curTheme = this.state.theme === themes.dark ?
+        const curTheme = this.state.theme === 'dark' ?
             'dark' : 'light';
 
         while (bodyClasses.length > 0) {
@@ -61,12 +65,16 @@ export default class App extends Component<{}, State> {
                 <Route path={'/posts'} exact component={Posts}/>}/>
                 <Route path={'/posts/:id'} component={FullPost}/>
                 <Route path={'/graph'} component={GraphPage}/>
+                <Route path={'/table'} component={Table}/>
             </Switch>
         );
         return (
             <div>
-                <ThemeContext.Provider value={{theme, toggleTheme}}>
-                    <Layout changeTheme={this.toggleTheme}>
+                <ThemeContext.Provider
+                value={{
+                    theme,
+                    toggleTheme: toggleTheme}}>
+                    <Layout changeTheme={toggleTheme}>
                         <Suspense fallback={<div>...Loading</div>}>
                             {routes}
                         </Suspense>

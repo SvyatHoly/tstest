@@ -1,31 +1,39 @@
-import React, {useEffect, useState} from 'react'
-import * as d3 from 'd3'
-import {interpolateLab, scaleLinear} from 'd3'
-import './Bars.css'
+import {useEffect, useState} from 'react';
+import {interpolateLab, scaleLinear, select} from 'd3';
+import * as PropTypes from 'prop-types';
+import './Bars.scss';
+
+bars.propTypes = {
+    scales: PropTypes.object,
+    margins: PropTypes.object,
+    data: PropTypes.array,
+    dimensions: PropTypes.object,
+    forwardRef: PropTypes.object,
+    maxVal: PropTypes.number
+};
 
 /**
  * Component render bars to the chart
  */
-const bars = (props) => {
-    const {data, forwardRef, scales, margins, dimensions, maxVal} = props;
+export default function bars({data, forwardRef, scales, margins, dimensions, maxVal}) {
     const {xScale, yScale} = scales;
     const {height} = dimensions;
 
     const [locData, setLocData] = useState(null);
 
-    /***
+    /**
      * When component did mount create an array of x,y and other data for each bar
      */
     useEffect(() => {
-        calcBarsPosition()
+        calcBarsPosition();
     }, [null]);
 
-    /***
+    /**
      * When location data is ready - start render bars
      */
     useEffect(() => {
         if (locData) {
-            renderBars()
+            renderBars();
         }
     }, [locData]);
 
@@ -40,10 +48,9 @@ const bars = (props) => {
 
             const heightCalc = () => {
                 if (actualSum === 0) {
-                    return height - margins.bottom - Math.abs(yScale(planSum))
-                } else {
-                    return height - margins.bottom - Math.abs(yScale(actualSum))
+                    return height - margins.bottom - Math.abs(yScale(planSum));
                 }
+                return height - margins.bottom - Math.abs(yScale(actualSum));
             };
             const x = xScale(date);
 
@@ -84,10 +91,9 @@ const bars = (props) => {
         if (actualSum === 0) {
             return '#808580';
         } else if (actualSum >= planSum) {
-            return setGreen(actualSum)
-        } else {
-            return setRed(actualSum);
+            return setGreen(actualSum);
         }
+        return setRed(actualSum);
     };
 
     const attributes = [];
@@ -100,7 +106,7 @@ const bars = (props) => {
             setTimeout(() => createBar(), i * 100);
 
             const createBar = () => {
-                const svg = d3.select(forwardRef.current);
+                const svg = select(forwardRef.current);
                 svg
                     .append('rect')
                     .attr('x', rectX)
@@ -121,16 +127,16 @@ const bars = (props) => {
                     .text(actualSum === 0 ? null : actualSum)
                     .attr('x', textX)
                     .attr('y', textY)
-                    .attr('fill', 'white')
+                    .attr('fill', '#a4aba6')
                     .attr('opacity', 0);
 
                 text.transition()
                     .delay(300)
                     .duration(1000)
-                    .attr('opacity', 1)
+                    .attr('opacity', 1);
 
-            }
-        })
+            };
+        });
     };
 
     /**
@@ -142,7 +148,7 @@ const bars = (props) => {
 
         const textData = JSON.stringify(dataMy);
 
-        let el = d3.select('#bar' + id);
+        let el = select('#bar' + id);
         if (attributes.length === 0 || attributes[0].id !== id) {
             const node = {
                 el,
@@ -169,7 +175,7 @@ const bars = (props) => {
     };
 
     const barTransition = (item, textData) => {
-        let svg = d3.select(forwardRef.current);
+        let svg = select(forwardRef.current);
         const {x, y, height, width, fill, el, show, id} = item;
 
         const text = svg.append('text');
@@ -181,7 +187,7 @@ const bars = (props) => {
                     .text(el.replace(/[[\]}{"]+/g, ' '))
                     .attr('dy', '1em')
                     .attr('x', 2000)
-                    .attr('class', 'text' + id)
+                    .attr('class', 'text' + id);
             });
             text
                 .attr("y", 150)
@@ -201,7 +207,7 @@ const bars = (props) => {
                         .transition()
                         .duration(800)
                         .attr("x", 950);
-                })
+                });
         } else {
             const tspan = svg.selectAll('tspan');
 
@@ -210,7 +216,7 @@ const bars = (props) => {
                 .duration(800)
                 .attr("x", 2000)
                 .on('end', () => {
-                    d3.select('#text' + id).remove()
+                    select('#text' + id).remove();
                 });
             el.transition()
                 .duration(800)
@@ -218,11 +224,9 @@ const bars = (props) => {
                 .attr("x", x)
                 .attr('width', width)
                 .attr('height', height)
-                .attr('fill', fill)
+                .attr('fill', fill);
         }
     };
 
     return null;
-};
-
-export default bars;
+}

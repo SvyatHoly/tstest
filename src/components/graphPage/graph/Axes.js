@@ -1,9 +1,16 @@
-import React from 'react'
-import Axis from './Axis'
+import React from 'react';
+import * as PropTypes from 'prop-types';
+import Axis from './Axis';
 
-export default ({scales, margins, dimensions, forwardRef}) => {
+axes.propTypes = {
+    scales: PropTypes.object,
+    margins: PropTypes.object,
+    dimensions: PropTypes.object,
+    forwardRef: PropTypes.object
+};
+
+export default function axes({scales, margins, dimensions, forwardRef}) {
     const {height, width} = dimensions;
-
     const xProps = {
         orient: 'Bottom',
         scale: scales.xScale,

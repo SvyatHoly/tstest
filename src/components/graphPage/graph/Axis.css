@@ -1,15 +1,11 @@
-
-.Axis path,
-.Axis line {
-    stroke: #787878;
-}
-
+.Axis path, .Axis line {
+  stroke: #787878; }
 .Axis text {
-    font-size: 11px;
-    fill: #a4aba6;
-}
+  font-size: 11px;
+  fill: #a4aba6; }
 
 .Axis-Bottom text {
-    transform: rotate(-45deg);
-    text-anchor: end;
-}
+  transform: rotate(-45deg);
+  text-anchor: end; }
+
+/*# sourceMappingURL=Axis.css.map */

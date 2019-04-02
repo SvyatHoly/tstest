@@ -1,13 +1,12 @@
 import React from 'react'
 import * as classes from './Switcher.module.css'
 import './Switcher.module.css'
-import ThemeContext from '../../../context/ThemeContext'
+import {ThemeContext, ThemeContextI} from '../../../App'
 
-type Props = {};
-
-const switcher = (props: Props) => {
+const switcher = () => {
     return (
-        <ThemeContext.Consumer>{({theme, toggleTheme}) => (
+        <ThemeContext.Consumer>
+            {({toggleTheme}: ThemeContextI) => (
             <div className={classes.body}>
                 <div className={classes.check_label}>
                     <div className={classes.toggle}>

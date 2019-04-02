@@ -3,7 +3,7 @@ import SinglePost from './singlePost/SinglePost'
 import * as classes from './Posts.module.css'
 import {getPosts} from '../../api'
 import {findSubString} from '../../util/stringSearchUtil'
-import ThemeContext from '../../context/ThemeContext';
+import {ThemeContext} from '../../App';
 
 interface IProps {
     history: any;
@@ -139,20 +139,21 @@ class Posts extends Component<IProps, IState> {
 
         return (
             <ThemeContext.Consumer>
-                {(theme) =>
+                {(theme)=>
                     <div className={[classes.container, theme].join(' ')}>
                         <div className={classes.inputBox}>
+                            <label className={classes.label}>SEARCH
                             <input
                                 className={classes.input}
                                 onChange={this.inputHandler}
                                 value={input}
                             />
+                            </label>
                         </div>
                         {this.renderPosts()}
                     </div>
                 }
             </ThemeContext.Consumer>
-
                 );
     };
 }

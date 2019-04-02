@@ -12,6 +12,7 @@
     "d3": "^5.9.2",
     "lodash": "^4.17.11",
     "node-sass": "^4.11.0",
+    "prop-types": "^15.7.2",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "react-router-dom": "^4.3.1",
@@ -35,6 +36,10 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-plugin-react": "^7.12.4",
+    "tslint": "^5.14.0",
+    "tslint-react": "^4.0.0",
     "typed-css-modules": "^0.4.2"
   }
 }

@@ -1,9 +1,17 @@
-import React, {useEffect, useState} from 'react'
-import * as d3 from 'd3'
-import './Line.css'
+import {useEffect, useState} from 'react';
+import * as d3 from 'd3';
+import './Line.scss';
+import * as PropTypes from 'prop-types';
 
-const line = (props) => {
-    const {scales, margins, data, dimensions, forwardRef} = props;
+line.propTypes = {
+    scales: PropTypes.object,
+    margins: PropTypes.object,
+    data: PropTypes.array,
+    dimensions: PropTypes.object,
+    forwardRef: PropTypes.object
+};
+
+export default function line ({scales, margins, data, dimensions, forwardRef}) {
     const {xScale, yScale} = scales;
     const {width} = dimensions;
 
@@ -49,22 +57,23 @@ const line = (props) => {
             count++;
         }
 
-        if (count % 2 === 0)
+        if (count % 2 === 0) {
             sd += ", 2";
-        sd += ", " + (totalLen - d);
+            sd += ", " + (totalLen - d);
 
-        p
-            .attr("stroke-dasharray", sd + " " + totalLen)
-            .attr("stroke-dashoffset", totalLen + 200)
-            .transition()
-            .duration(2500)
-            .attr("stroke-dashoffset", 0);
+            p
+                .attr("stroke-dasharray", sd + " " + totalLen)
+                .attr("stroke-dashoffset", totalLen + 200)
+                .transition()
+                .duration(2500)
+                .attr("stroke-dashoffset", 0);
+        }
     };
 
     const renderDots = () => {
 
         data.forEach((el, i) => {
-            setTimeout(() => renderOneDot(el), i * 150)
+            setTimeout(() => renderOneDot(el), i * 150);
         });
 
         const renderOneDot = (el) => {
@@ -80,8 +89,8 @@ const line = (props) => {
                 .on('mouseout', () => removeChild(el))
                 .transition()
                 .duration(1000)
-                .attr('opacity', 1)
-        }
+                .attr('opacity', 1);
+        };
     };
 
     const prepareData = () => {
@@ -91,25 +100,23 @@ const line = (props) => {
 
             if (el.actualSum === 0 && !isCurDateSetted) {
                 isCurDateSetted = true;
-                setCurDate(data[i - 1].date)
+                setCurDate(data[i - 1].date);
             }
 
             if (i === 0) {
                 return {
                     x: margins.left,
                     y: yScale(el.planSum)
-                }
+                };
             } else if (i !== data.length - 1) {
                 return {
                     x: xScale(el.date) + xScale.bandwidth() / 2,
                     y: yScale(el.planSum)
-                }
-            } else {
-                return {
+                };
+            } return {
                     x: width - margins.right,
                     y: yScale(el.planSum)
-                }
-            }
+                };
         });
 
         setLinePath(prepared);
@@ -140,10 +147,10 @@ const line = (props) => {
 
         text.append('tspan')
             .text(id.planSum)
-            .attr('x', function (d) {
+            .attr('x', function () {
                 return d3.select(this.parentNode).attr("x");
             })
-            .attr('y', function (d) {
+            .attr('y', function () {
                 return d3.select(this.parentNode).attr("y");
             })
             .attr('fill', 'white');
@@ -158,7 +165,7 @@ const line = (props) => {
             .duration(300)
             .attr('y', y - 90)
             .attr('fill', 'white')
-            .on('end', function (d) {
+            .on('end', function () {
                 text.append('tspan')
                     .text('план:  ' + id.planSum)
                     .attr('id', 'tspan' + id.date.replace(/\.+/g, ''))
@@ -169,7 +176,7 @@ const line = (props) => {
                     .duration(200)
                     .attr('y', y - 60)
                     .attr('fill', 'white');
-            })
+            });
     };
 
     const removeChild = (id) => {
@@ -197,6 +204,4 @@ const line = (props) => {
     };
 
     return null;
-};
-
-export default line;
+}

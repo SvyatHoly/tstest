@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Chart from './graph/Chart';
-import jsonFromServer from '../../data/data';
+import jsonFromServer from '../../data/plan';
 import _ from "lodash";
 import pathChecker from '../../util/pathChecker';
 
@@ -9,9 +9,8 @@ import pathChecker from '../../util/pathChecker';
  * */
 export const GraphContext = React.createContext({
     isRenderStarted: false,
-    startRenderGraphComponents: () => {}
+    startRenderGraphComponents: () => null
 });
-
 
 /**
  * This component convert data to more usable format,
@@ -35,13 +34,13 @@ const graphPage = () => {
         let maxValCalc = 0;
 
         data.reduce((prev, curr, i) => {
-            //check path to undefined values
+            //  check path to undefined values
             const actualChecked = pathChecker(['leftovers', 'actual'], curr);
             const planChecked = pathChecker(['leftovers', 'plan'], curr);
             const sector = pathChecker(['sector'], curr);
             const date = pathChecker(['date'], curr);
 
-            //convert string value to number
+            //  convert string value to a number
             const actual = _.parseInt(actualChecked.replace(/ /g, ''));
             const plan = _.parseInt(planChecked.replace(/ /g, ''));
 
@@ -63,10 +62,8 @@ const graphPage = () => {
 
                 return null;
 
-            //else take value to next iteration
-            } else {
-                return {actual, plan, sector}
-            }
+            //  else take value to next iteration
+            } return {actual, plan, sector};
         }, 0);
 
         setNormalData(newData);
@@ -76,19 +73,18 @@ const graphPage = () => {
     /**
      * handle user click on 'show' button */
     const onStartClickHandler = () => {
-        setIsRenderStarted(true)
+        setIsRenderStarted(true);
     };
-    /** Whether data is normalised send it to chart component */
+    /** Whether data is normalised, send it to chart component */
     const renderChart = () => {
         if (normalData) {
             return (
                 <Chart
                     data={normalData}
                     maxVal={maxVal}
-                    onStart={onStartClickHandler}
                 />
-            )
-        } else return null;
+            );
+        } return null;
     };
 
     return (
@@ -100,7 +96,7 @@ const graphPage = () => {
             {renderChart()}
 
         </GraphContext.Provider>
-    )
+    );
 
 };
 
